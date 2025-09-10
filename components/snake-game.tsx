@@ -234,6 +234,8 @@ export function SnakeGame() {
   )
 
   useEffect(() => {
+    if (typeof window === "undefined") return
+
     window.addEventListener("keydown", handleKeyPress)
     return () => window.removeEventListener("keydown", handleKeyPress)
   }, [handleKeyPress])

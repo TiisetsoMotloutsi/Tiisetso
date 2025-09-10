@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ExternalLink, Github } from "lucide-react"
 
-const projects = [
+const getProjects = (currentOrigin?: string) => [
   {
     title: "Personal Portfolio",
     description:
@@ -12,7 +12,7 @@ const projects = [
     image: "/placeholder-lshsw.png",
     technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
     github: "https://github.com/TiisetsoMotloutsi/portfolio",
-    demo: window.location.origin, // Current portfolio as demo
+    demo: currentOrigin || "#", // Use current origin or fallback
   },
   {
     title: "EasyCover",
@@ -20,7 +20,7 @@ const projects = [
     image: "/cv-generator-application-interface.jpg",
     technologies: ["Java", "Spring Boot", "React", "PostgreSQL"],
     github: "https://github.com/TiisetsoMotloutsi/easycover",
-    demo: "https://github.com/TiisetsoMotloutsi/easycover", // GitHub as demo until deployed
+    demo: "https://github.com/TiisetsoMotloutsi/easycover",
   },
   {
     title: "Snake Game Enhanced",
@@ -29,7 +29,7 @@ const projects = [
     image: "/modern-snake-game-interface.jpg",
     technologies: ["JavaScript", "Canvas API", "CSS3", "HTML5"],
     github: "https://github.com/TiisetsoMotloutsi/snake-game",
-    demo: "#snake-game", // Link to snake game section on same page
+    demo: "#snake-game",
   },
   {
     title: "Task Management System",
@@ -38,13 +38,20 @@ const projects = [
     image: "/task-management-dashboard.png",
     technologies: ["C#", ".NET Core", "Angular", "SQL Server"],
     github: "https://github.com/TiisetsoMotloutsi/task-management",
-    demo: "https://github.com/TiisetsoMotloutsi/task-management", // GitHub as demo until deployed
+    demo: "https://github.com/TiisetsoMotloutsi/task-management",
   },
 ]
 
 export function Projects() {
   const [isVisible, setIsVisible] = useState(false)
+  const [projects, setProjects] = useState(() => getProjects())
   const sectionRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setProjects(getProjects(window.location.origin))
+    }
+  }, [])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -104,7 +111,11 @@ export function Projects() {
                       size="sm"
                       variant="outline"
                       className="glass border-primary/30 hover:bg-primary/10 bg-transparent"
-                      onClick={() => window.open(project.github, "_blank")}
+                      onClick={() => {
+                        if (typeof window !== "undefined") {
+                          window.open(project.github, "_blank")
+                        }
+                      }}
                     >
                       <Github className="mr-2 h-4 w-4" />
                       Code
@@ -114,11 +125,9 @@ export function Projects() {
                       className="bg-primary hover:bg-primary/80"
                       onClick={() => {
                         if (project.demo.startsWith("#")) {
-                          // Scroll to section on same page
                           const element = document.querySelector(project.demo)
                           element?.scrollIntoView({ behavior: "smooth" })
-                        } else {
-                          // Open external link
+                        } else if (typeof window !== "undefined") {
                           window.open(project.demo, "_blank")
                         }
                       }}
