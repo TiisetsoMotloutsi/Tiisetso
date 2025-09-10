@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Github, Linkedin, Mail, Download } from "lucide-react"
+import { downloadCV } from "@/lib/cv-generator"
 
 export function Hero() {
   const [isVisible, setIsVisible] = useState(false)
@@ -16,6 +17,10 @@ export function Hero() {
     if (element) {
       element.scrollIntoView({ behavior: "smooth" })
     }
+  }
+
+  const handleDownloadCV = () => {
+    downloadCV()
   }
 
   return (
@@ -59,6 +64,7 @@ export function Hero() {
             <Button
               variant="outline"
               size="lg"
+              onClick={handleDownloadCV}
               className="bg-gray-800/80 border-gray-600/60 text-white hover:bg-gray-700/80 hover:border-gray-500/60 backdrop-blur-sm transition-all duration-300"
             >
               <Download className="mr-2 h-4 w-4" />
