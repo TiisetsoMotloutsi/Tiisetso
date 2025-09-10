@@ -15,6 +15,14 @@ const getProjects = (currentOrigin?: string) => [
     demo: currentOrigin || "#", // Use current origin or fallback
   },
   {
+    title: "Personal",
+    description: "A website about friendship, exploring the bonds and connections that make relationships meaningful.",
+    image: "/friendship-website.jpg",
+    technologies: ["HTML", "CSS"],
+    github: "https://github.com/TiisetsoMotloutsi/Personal",
+    demo: "https://tiisetsomotloutsi.github.io/Personal/",
+  },
+  {
     title: "EasyCover",
     description: "An intelligent application for funeral cover.",
     image: "/cv-generator-application-interface.jpg",
