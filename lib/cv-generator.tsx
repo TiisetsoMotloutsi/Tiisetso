@@ -1,267 +1,181 @@
 import { cvData } from "./cv-data"
 
-export function generateCVHTML(): string {
-  return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${cvData.personalInfo.name} - CV</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            background: #fff;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #8b5cf6;
-        }
-        
-        .name {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 5px;
-        }
-        
-        .title {
-            font-size: 1.2em;
-            color: #8b5cf6;
-            margin-bottom: 15px;
-        }
-        
-        .contact-info {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            font-size: 0.9em;
-            color: #6b7280;
-        }
-        
-        .section {
-            margin-bottom: 25px;
-        }
-        
-        .section-title {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        
-        .profile-text {
-            text-align: justify;
-            color: #4b5563;
-            line-height: 1.7;
-        }
-        
-        .education-item, .experience-item {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #f9fafb;
-            border-left: 4px solid #8b5cf6;
-        }
-        
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-        }
-        
-        .item-title {
-            font-weight: bold;
-            color: #1f2937;
-        }
-        
-        .item-period {
-            color: #6b7280;
-            font-size: 0.9em;
-        }
-        
-        .item-subtitle {
-            color: #8b5cf6;
-            margin-bottom: 5px;
-        }
-        
-        .item-location {
-            color: #6b7280;
-            font-size: 0.9em;
-            margin-bottom: 8px;
-        }
-        
-        .item-details {
-            list-style: none;
-            padding-left: 0;
-        }
-        
-        .item-details li {
-            margin-bottom: 3px;
-            padding-left: 15px;
-            position: relative;
-        }
-        
-        .item-details li:before {
-            content: "•";
-            color: #8b5cf6;
-            position: absolute;
-            left: 0;
-        }
-        
-        .certificates-list, .skills-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .certificate-item, .skill-item {
-            background: #8b5cf6;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.9em;
-        }
-        
-        @media print {
-            body {
-                padding: 20px;
-            }
-            
-            .header {
-                margin-bottom: 20px;
-            }
-            
-            .section {
-                margin-bottom: 15px;
-            }
-        }
-        
-        @media (max-width: 600px) {
-            .contact-info {
-                flex-direction: column;
-                gap: 5px;
-            }
-            
-            .item-header {
-                flex-direction: column;
-            }
-            
-            .certificates-list, .skills-list {
-                justify-content: center;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1 class="name">${cvData.personalInfo.name}</h1>
-        <p class="title">${cvData.personalInfo.title}</p>
-        <div class="contact-info">
-            <span>${cvData.personalInfo.email}</span>
-            <span>${cvData.personalInfo.phone}</span>
-            <span>${cvData.personalInfo.address}</span>
+export const downloadCV = async () => {
+  try {
+    const { jsPDF } = await import("jspdf")
+
+    const doc = new jsPDF()
+
+    const pageWidth = doc.internal.pageSize.width
+    const margin = 20
+    let yPosition = 30
+
+    // Helper function to add text with word wrapping
+    const addText = (text: string, fontSize = 10, isBold = false) => {
+      doc.setFontSize(fontSize)
+      if (isBold) {
+        doc.setFont("helvetica", "bold")
+      } else {
+        doc.setFont("helvetica", "normal")
+      }
+
+      const lines = doc.splitTextToSize(text, pageWidth - 2 * margin)
+      doc.text(lines, margin, yPosition)
+      yPosition += lines.length * (fontSize * 0.4) + 5
+    }
+
+    // Add header
+    addText(cvData.personalInfo.name, 18, true)
+    addText(cvData.personalInfo.title, 14, true)
+    addText(`Email: ${cvData.personalInfo.email}`, 10)
+    addText(`Phone: ${cvData.personalInfo.phone}`, 10)
+    addText(`Address: ${cvData.personalInfo.address}`, 10)
+
+    yPosition += 10
+
+    // Add Profile section
+    addText("PROFILE", 14, true)
+    addText(cvData.profile, 10)
+
+    yPosition += 10
+
+    // Add Education section
+    addText("EDUCATION", 14, true)
+    cvData.education.forEach((edu) => {
+      addText(`${edu.institution}, ${edu.degree}`, 12, true)
+      addText(`${edu.period} | ${edu.location}`, 10)
+      edu.details.forEach((detail) => {
+        addText(`• ${detail}`, 10)
+      })
+      yPosition += 5
+    })
+
+    // Add Professional Experience section
+    addText("PROFESSIONAL EXPERIENCE", 14, true)
+    cvData.experience.forEach((exp) => {
+      addText(`${exp.title}, ${exp.company}`, 12, true)
+      addText(`${exp.period} | ${exp.location}`, 10)
+      exp.responsibilities.forEach((resp) => {
+        addText(`• ${resp}`, 10)
+      })
+      yPosition += 5
+    })
+
+    // Add Certificates section
+    addText("CERTIFICATES", 14, true)
+    cvData.certificates.forEach((cert) => {
+      addText(`• ${cert}`, 10)
+    })
+
+    yPosition += 10
+
+    // Add Skills section
+    addText("SKILLS", 14, true)
+    const skillsText = cvData.skills.join(" • ")
+    addText(skillsText, 10)
+
+    doc.save("Tiisetso_Motloutsi_CV.pdf")
+  } catch (error) {
+    console.error("Error generating PDF:", error)
+    downloadHTMLCV()
+  }
+}
+
+const downloadHTMLCV = () => {
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>${cvData.personalInfo.name} - CV</title>
+      <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .name { font-size: 24px; font-weight: bold; margin-bottom: 5px; }
+        .title { font-size: 18px; color: #666; margin-bottom: 15px; }
+        .contact { font-size: 14px; }
+        .section { margin-bottom: 25px; }
+        .section-title { font-size: 16px; font-weight: bold; border-bottom: 2px solid #333; margin-bottom: 10px; }
+        .item { margin-bottom: 15px; }
+        .item-title { font-weight: bold; }
+        .item-subtitle { color: #666; font-style: italic; }
+        ul { margin: 5px 0; padding-left: 20px; }
+        .skills { display: flex; flex-wrap: wrap; gap: 10px; }
+        .skill { background: #f0f0f0; padding: 5px 10px; border-radius: 5px; }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <div class="name">${cvData.personalInfo.name}</div>
+        <div class="title">${cvData.personalInfo.title}</div>
+        <div class="contact">
+          ${cvData.personalInfo.email} | ${cvData.personalInfo.phone}<br>
+          ${cvData.personalInfo.address}
         </div>
-    </div>
-
-    <div class="section">
-        <h2 class="section-title">Profile</h2>
-        <p class="profile-text">${cvData.profile}</p>
-    </div>
-
-    <div class="section">
-        <h2 class="section-title">Education</h2>
+      </div>
+      
+      <div class="section">
+        <div class="section-title">PROFILE</div>
+        <p>${cvData.profile}</p>
+      </div>
+      
+      <div class="section">
+        <div class="section-title">EDUCATION</div>
         ${cvData.education
           .map(
             (edu) => `
-            <div class="education-item">
-                <div class="item-header">
-                    <div>
-                        <div class="item-title">${edu.institution}</div>
-                        <div class="item-subtitle">${edu.degree}</div>
-                    </div>
-                    <div class="item-period">${edu.period}</div>
-                </div>
-                <div class="item-location">${edu.location}</div>
-                <ul class="item-details">
-                    ${edu.details.map((detail) => `<li>${detail}</li>`).join("")}
-                </ul>
-            </div>
+          <div class="item">
+            <div class="item-title">${edu.institution}</div>
+            <div class="item-subtitle">${edu.degree} | ${edu.period} | ${edu.location}</div>
+            <ul>
+              ${edu.details.map((detail) => `<li>${detail}</li>`).join("")}
+            </ul>
+          </div>
         `,
           )
           .join("")}
-    </div>
-
-    <div class="section">
-        <h2 class="section-title">Professional Experience</h2>
+      </div>
+      
+      <div class="section">
+        <div class="section-title">PROFESSIONAL EXPERIENCE</div>
         ${cvData.experience
           .map(
             (exp) => `
-            <div class="experience-item">
-                <div class="item-header">
-                    <div>
-                        <div class="item-title">${exp.title}</div>
-                        <div class="item-subtitle">${exp.company}</div>
-                    </div>
-                    <div class="item-period">${exp.period}</div>
-                </div>
-                <div class="item-location">${exp.location}</div>
-                <ul class="item-details">
-                    ${exp.responsibilities.map((resp) => `<li>${resp}</li>`).join("")}
-                </ul>
-            </div>
+          <div class="item">
+            <div class="item-title">${exp.title}</div>
+            <div class="item-subtitle">${exp.company} | ${exp.period} | ${exp.location}</div>
+            <ul>
+              ${exp.responsibilities.map((resp) => `<li>${resp}</li>`).join("")}
+            </ul>
+          </div>
         `,
           )
           .join("")}
-    </div>
-
-    <div class="section">
-        <h2 class="section-title">Certificates</h2>
-        <div class="certificates-list">
-            ${cvData.certificates.map((cert) => `<span class="certificate-item">${cert}</span>`).join("")}
+      </div>
+      
+      <div class="section">
+        <div class="section-title">CERTIFICATES</div>
+        <ul>
+          ${cvData.certificates.map((cert) => `<li>${cert}</li>`).join("")}
+        </ul>
+      </div>
+      
+      <div class="section">
+        <div class="section-title">SKILLS</div>
+        <div class="skills">
+          ${cvData.skills.map((skill) => `<span class="skill">${skill}</span>`).join("")}
         </div>
-    </div>
-
-    <div class="section">
-        <h2 class="section-title">Skills</h2>
-        <div class="skills-list">
-            ${cvData.skills.map((skill) => `<span class="skill-item">${skill}</span>`).join("")}
-        </div>
-    </div>
-</body>
-</html>
+      </div>
+    </body>
+    </html>
   `
-}
 
-export function downloadCV() {
-  const cvHTML = generateCVHTML()
-  const blob = new Blob([cvHTML], { type: "text/html" })
+  const blob = new Blob([htmlContent], { type: "text/html" })
   const url = URL.createObjectURL(blob)
-
-  const link = document.createElement("a")
-  link.href = url
-  link.download = "Tiisetso_Motloutsi_CV.html"
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-
+  const a = document.createElement("a")
+  a.href = url
+  a.download = "Tiisetso_Motloutsi_CV.html"
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
   URL.revokeObjectURL(url)
 }
