@@ -93,7 +93,14 @@ export function Contact() {
                 </div>
                 <div>
                   <div className="font-medium text-white">Email</div>
-                  <div className="text-muted-foreground">setswo173@gmail.com</div>
+                  <div className="text-muted-foreground">
+                    <a
+                      href="mailto:setswo173@gmail.com"
+                      className="hover:text-primary transition-colors duration-200 hover:underline"
+                    >
+                      setswo173@gmail.com
+                    </a>
+                  </div>
                 </div>
               </div>
 
@@ -103,7 +110,14 @@ export function Contact() {
                 </div>
                 <div>
                   <div className="font-medium text-white">Phone</div>
-                  <div className="text-muted-foreground">0820439431</div>
+                  <div className="text-muted-foreground">
+                    <a
+                      href="tel:+27820439431"
+                      className="hover:text-primary transition-colors duration-200 hover:underline"
+                    >
+                      0820439431
+                    </a>
+                  </div>
                 </div>
               </div>
 
