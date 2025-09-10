@@ -8,7 +8,7 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   title: "Tiisetso Motloutsi",
-  description: "Created with v0",
+  description: "Portfolio of Tiisetso Motloutsi, a software developer graduate",
   generator: "v0.app",
 }
 
