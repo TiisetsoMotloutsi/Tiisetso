@@ -6,7 +6,7 @@ import { ExternalLink, Github } from "lucide-react"
 
 const getProjects = (currentOrigin?: string) => [
   {
-    title: "Personal Portfolio",
+    title: "Tiisetso Motloutsi Portfolio",
     description:
       "A futuristic glassmorphism portfolio website built with Next.js, featuring smooth animations and modern design patterns.",
     image: "/placeholder-lshsw.png",
