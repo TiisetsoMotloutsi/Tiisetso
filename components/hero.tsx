@@ -32,7 +32,7 @@ export function Hero() {
             <div className="relative">
               <div className="w-32 h-32 rounded-full glass-strong p-1 animate-glow">
                 <img
-                  src="/software-developer-portrait.png"
+                  src="/images/profile.jpeg"
                   alt="Tiisetso Motloutsi"
                   className="w-full h-full rounded-full object-cover"
                 />
