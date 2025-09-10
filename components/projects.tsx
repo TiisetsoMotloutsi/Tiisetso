@@ -11,17 +11,16 @@ const projects = [
       "A futuristic glassmorphism portfolio website built with Next.js, featuring smooth animations and modern design patterns.",
     image: "/placeholder-lshsw.png",
     technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
-    github: "#",
-    demo: "#",
+    github: "https://github.com/TiisetsoMotloutsi/portfolio",
+    demo: window.location.origin, // Current portfolio as demo
   },
   {
     title: "EasyCover",
-    description:
-      "An intelligent application for funeral cover.",
+    description: "An intelligent application for funeral cover.",
     image: "/cv-generator-application-interface.jpg",
     technologies: ["Java", "Spring Boot", "React", "PostgreSQL"],
-    github: "#",
-    demo: "#",
+    github: "https://github.com/TiisetsoMotloutsi/easycover",
+    demo: "https://github.com/TiisetsoMotloutsi/easycover", // GitHub as demo until deployed
   },
   {
     title: "Snake Game Enhanced",
@@ -29,8 +28,8 @@ const projects = [
       "A modern take on the classic Snake game with smooth animations, particle effects, and progressive difficulty levels.",
     image: "/modern-snake-game-interface.jpg",
     technologies: ["JavaScript", "Canvas API", "CSS3", "HTML5"],
-    github: "#",
-    demo: "#",
+    github: "https://github.com/TiisetsoMotloutsi/snake-game",
+    demo: "#snake-game", // Link to snake game section on same page
   },
   {
     title: "Task Management System",
@@ -38,8 +37,8 @@ const projects = [
       "A comprehensive project management tool with real-time collaboration, task tracking, and team analytics.",
     image: "/task-management-dashboard.png",
     technologies: ["C#", ".NET Core", "Angular", "SQL Server"],
-    github: "#",
-    demo: "#",
+    github: "https://github.com/TiisetsoMotloutsi/task-management",
+    demo: "https://github.com/TiisetsoMotloutsi/task-management", // GitHub as demo until deployed
   },
 ]
 
@@ -105,11 +104,25 @@ export function Projects() {
                       size="sm"
                       variant="outline"
                       className="glass border-primary/30 hover:bg-primary/10 bg-transparent"
+                      onClick={() => window.open(project.github, "_blank")}
                     >
                       <Github className="mr-2 h-4 w-4" />
                       Code
                     </Button>
-                    <Button size="sm" className="bg-primary hover:bg-primary/80">
+                    <Button
+                      size="sm"
+                      className="bg-primary hover:bg-primary/80"
+                      onClick={() => {
+                        if (project.demo.startsWith("#")) {
+                          // Scroll to section on same page
+                          const element = document.querySelector(project.demo)
+                          element?.scrollIntoView({ behavior: "smooth" })
+                        } else {
+                          // Open external link
+                          window.open(project.demo, "_blank")
+                        }
+                      }}
+                    >
                       <ExternalLink className="mr-2 h-4 w-4" />
                       Demo
                     </Button>
