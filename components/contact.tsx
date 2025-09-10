@@ -163,7 +163,7 @@ export function Contact() {
                   onChange={handleChange}
                   required
                   className="glass border-primary/30 focus:border-primary"
-                  placeholder="your.email@example.com"
+                  placeholder="setswo173@gmail.com"
                 />
               </div>
 
