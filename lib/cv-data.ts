@@ -44,7 +44,8 @@ export const cvData = {
   certificates: [
     "Oracle Certified Associate, Java SE 8 Programmer",
     "IBM Artificial Intelligence",
-    "IBM Professional Skills Information Technology Specialist",
+    "IBM Professional Skills",
+    "Information Technology Specialist",
   ],
   skills: [
     "Web Development",
