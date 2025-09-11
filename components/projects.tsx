@@ -17,7 +17,7 @@ const getProjects = (currentOrigin?: string) => [
   {
     title: "Personal",
     description: "A website about friendship, exploring the bonds and connections that make relationships meaningful.",
-    image: "/friendship-website.jpg",
+    image: "/images/friendship-photo.jpeg",
     technologies: ["HTML", "CSS"],
     github: "https://github.com/TiisetsoMotloutsi/Personal",
     demo: "https://tiisetsomotloutsi.github.io/Personal/",
